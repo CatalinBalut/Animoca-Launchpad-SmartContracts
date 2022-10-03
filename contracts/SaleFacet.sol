@@ -18,6 +18,9 @@ import {PurchaseLifeCyclesStorage} from "./purchaseLifeCycle/libraries/PurchaseL
 
 // import {IPurchaseNotificationsReceiver} from "./sale/interfaces/IPurchaseNotificationsReceiver.sol";
 
+import {AddressIsContract} from "./AddressIsContract.sol";
+
+
 import {StartableBase} from "./startable/base/StartableBase.sol";
 import {StartableStorage} from "./startable/libraries/StartableStorage.sol";
 
@@ -28,7 +31,13 @@ contract SaleFacet is ContractOwnershipBase, PayoutWalletBase, PauseBase, Purcha
     using PurchaseLifeCyclesStorage for PurchaseLifeCyclesStorage.Layout;
     using StartableStorage for StartableStorage.Layout;
 
+    using AddressIsContract for address;
+
     constructor(){
+    }
+
+    function checkAddress(address account) public view returns(bool) {
+        return account.isContract();
     }
 
     function initContract() whenNotStarted() public {
