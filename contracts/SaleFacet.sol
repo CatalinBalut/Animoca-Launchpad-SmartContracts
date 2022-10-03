@@ -2,6 +2,9 @@
 pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 
+import {EnumMap} from "./algo/EnumMap.sol";
+import {EnumSet} from "./algo/EnumSet.sol";
+
 import {ContractOwnershipBase} from "@animoca/ethereum-contracts/contracts/access/base/ContractOwnershipBase.sol";
 import {ContractOwnershipStorage} from "@animoca/ethereum-contracts/contracts/access/libraries/ContractOwnershipStorage.sol";
 
@@ -20,7 +23,6 @@ import {PurchaseLifeCyclesStorage} from "./purchaseLifeCycle/libraries/PurchaseL
 
 import {AddressIsContract} from "./AddressIsContract.sol";
 
-
 import {StartableBase} from "./startable/base/StartableBase.sol";
 import {StartableStorage} from "./startable/libraries/StartableStorage.sol";
 
@@ -32,6 +34,8 @@ contract SaleFacet is ContractOwnershipBase, PayoutWalletBase, PauseBase, Purcha
     using StartableStorage for StartableStorage.Layout;
 
     using AddressIsContract for address;
+    using EnumSet for EnumSet.Set;
+    using EnumMap for EnumMap.Map;
 
     constructor(){
     }
