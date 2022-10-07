@@ -21,7 +21,7 @@ abstract contract PurchaseLifeCyclesBase {
      * `estimatePurchase` lifecycle.
      * @param purchase The purchase conditions.
      */
-    function _estimatePurchase(PurchaseLifeCyclesStorage.Layout storage purchase) internal view virtual returns (uint256 totalPrice, bytes32[] memory pricingData) {
+    function _estimatePurchase(PurchaseLifeCyclesStorage.Layout memory purchase) internal view virtual returns (uint256 totalPrice, bytes32[] memory pricingData) {
         _validation(purchase);
         _pricing(purchase);
 
@@ -33,7 +33,7 @@ abstract contract PurchaseLifeCyclesBase {
      * `purchaseFor` lifecycle.
      * @param purchase The purchase conditions.
      */
-    function _purchaseFor(PurchaseLifeCyclesStorage.Layout storage purchase) internal virtual {
+    function _purchaseFor(PurchaseLifeCyclesStorage.Layout memory purchase) internal virtual {
         _validation(purchase);
         _pricing(purchase);
         _payment(purchase);
@@ -49,7 +49,7 @@ abstract contract PurchaseLifeCyclesBase {
      *  - Ensure that the purchase pre-conditions are met and revert if not.
      * @param purchase The purchase conditions.
      */
-    function _validation(PurchaseLifeCyclesStorage.Layout storage purchase) internal view virtual;
+    function _validation(PurchaseLifeCyclesStorage.Layout memory purchase) internal view virtual;
 
     /**
      * Lifecycle step which computes the purchase price.
@@ -59,7 +59,7 @@ abstract contract PurchaseLifeCyclesBase {
      *  - Add any relevant extra data related to pricing in `purchase.pricingData` and document how to interpret it.
      * @param purchase The purchase conditions.
      */
-    function _pricing(PurchaseLifeCyclesStorage.Layout storage purchase) internal view virtual;
+    function _pricing(PurchaseLifeCyclesStorage.Layout memory purchase) internal view virtual;
 
     /**
      * Lifecycle step which manages the transfer of funds from the purchaser.
@@ -69,7 +69,7 @@ abstract contract PurchaseLifeCyclesBase {
      *  - Add any relevant extra data related to payment in `purchase.paymentData` and document how to interpret it.
      * @param purchase The purchase conditions.
      */
-    function _payment(PurchaseLifeCyclesStorage.Layout storage purchase) internal virtual;
+    function _payment(PurchaseLifeCyclesStorage.Layout memory purchase) internal virtual;
 
     /**
      * Lifecycle step which delivers the purchased SKUs to the recipient.
@@ -79,7 +79,7 @@ abstract contract PurchaseLifeCyclesBase {
      *  - Add any relevant extra data related to delivery in `purchase.deliveryData` and document how to interpret it.
      * @param purchase The purchase conditions.
      */
-    function _delivery(PurchaseLifeCyclesStorage.Layout storage purchase) internal virtual;
+    function _delivery(PurchaseLifeCyclesStorage.Layout memory purchase) internal virtual;
 
     /**
      * Lifecycle step which notifies of the purchase.
@@ -88,5 +88,5 @@ abstract contract PurchaseLifeCyclesBase {
      *  - Handle calls to the notifications receiver contract's `onPurchaseNotificationReceived` function, if applicable.
      * @param purchase The purchase conditions.
      */
-    function _notification(PurchaseLifeCyclesStorage.Layout storage purchase) internal virtual;
+    function _notification(PurchaseLifeCyclesStorage.Layout memory purchase) internal virtual;
 }
