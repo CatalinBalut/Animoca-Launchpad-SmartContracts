@@ -74,9 +74,9 @@ abstract contract SaleFacet is ContractOwnershipBase, PayoutWalletBase, PauseBas
         bytes32[] memory names = new bytes32[](2);
         bytes32[] memory values = new bytes32[](2);
         //TODO address to bytes32 was removed in 0.8.0 -> must find another solution
-        //(names[0], values[0]) = ("TOKEN_ETH", bytes32(uint256(TOKEN_ETH)));
-        (names[0], values[0]) = ("TOKEN_ETH", bytes32(uint256(1))); //temporary solution
-        (names[1], values[1]) = ("SUPPLY_UNLIMITED", bytes32(uint256(SUPPLY_UNLIMITED)));
+        (names[0], values[0]) = ("TOKEN_ETH", bytes32(abi.encode(TOKEN_ETH)));
+        (names[0], values[0]) = ("TOKEN_ETH", bytes32(abi.encode(1))); //temporary solution
+        (names[1], values[1]) = ("SUPPLY_UNLIMITED", bytes32(abi.encode(SUPPLY_UNLIMITED)));
         emit MagicValues(names, values);
 
     }
@@ -229,9 +229,9 @@ abstract contract SaleFacet is ContractOwnershipBase, PayoutWalletBase, PauseBas
             require(token != address(0), "Sale: zero address token");
             uint256 price = prices[i];
             if (price == 0) {
-                //tokenPrices.remove(bytes32(uint256(token))); //!!!explicit type conversion not allwed from uint256 to address
+                tokenPrices.remove(bytes32(abi.encode(token))); //!!!explicit type conversion not allwed from uint256 to address
             } else {
-                //tokenPrices.set(bytes32(uint256(token)), bytes32(price)); //!!!explicit type conversion not allwed from uint256 to address
+                tokenPrices.set(bytes32(abi.encode(token)), bytes32(price)); //!!!explicit type conversion not allwed from uint256 to address
             }
         }
         require(tokenPrices.length() <= _tokensPerSkuCapacity, "Sale: too many tokens");
@@ -250,8 +250,7 @@ abstract contract SaleFacet is ContractOwnershipBase, PayoutWalletBase, PauseBas
             require(skuInfo.remainingSupply >= purchase.quantity, "Sale: insufficient supply");
         }
         //TODO address to bytes32 was removed in 0.8.0 -> must find another solution
-        //bytes32 priceKey = bytes32(uint256(purchase.token));
-        bytes32 priceKey = bytes32(purchase.sku);
+        bytes32 priceKey = bytes32(abi.encode(purchase.token));
         require(skuInfo.prices.contains(priceKey), "Sale: non-existent sku token");
     }
 
