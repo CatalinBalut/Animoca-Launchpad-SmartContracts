@@ -26,7 +26,7 @@ import {AddressIsContract} from "./AddressIsContract.sol";
 import {StartableBase} from "./startable/base/StartableBase.sol";
 import {StartableStorage} from "./startable/libraries/StartableStorage.sol";
 
-abstract contract SaleFacet is ContractOwnershipBase, PayoutWalletBase, PauseBase, PurchaseLifeCyclesBase, StartableBase, ISale, IPurchaseNotificationsReceiver {
+abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase, PurchaseLifeCyclesBase, StartableBase, ISale, IPurchaseNotificationsReceiver {
     using ContractOwnershipStorage for ContractOwnershipStorage.Layout;
     using PayoutWalletStorage for PayoutWalletStorage.Layout;
     using PauseStorage for PauseStorage.Layout;
@@ -73,9 +73,7 @@ abstract contract SaleFacet is ContractOwnershipBase, PayoutWalletBase, PauseBas
         _tokensPerSkuCapacity = tokensPerSkuCapacity;
         bytes32[] memory names = new bytes32[](2);
         bytes32[] memory values = new bytes32[](2);
-        //TODO address to bytes32 was removed in 0.8.0 -> must find another solution
         (names[0], values[0]) = ("TOKEN_ETH", bytes32(abi.encode(TOKEN_ETH)));
-        (names[0], values[0]) = ("TOKEN_ETH", bytes32(abi.encode(1))); //temporary solution
         (names[1], values[1]) = ("SUPPLY_UNLIMITED", bytes32(abi.encode(SUPPLY_UNLIMITED)));
         emit MagicValues(names, values);
 
