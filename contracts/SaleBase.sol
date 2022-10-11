@@ -26,7 +26,7 @@ import {AddressIsContract} from "./AddressIsContract.sol";
 import {StartableBase} from "./startable/base/StartableBase.sol";
 import {StartableStorage} from "./startable/libraries/StartableStorage.sol";
 
-abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase, PurchaseLifeCyclesBase, StartableBase, ISale, IPurchaseNotificationsReceiver {
+abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase, PurchaseLifeCyclesBase, StartableBase, ISale {
     using ContractOwnershipStorage for ContractOwnershipStorage.Layout;
     using PayoutWalletStorage for PayoutWalletStorage.Layout;
     using PauseStorage for PauseStorage.Layout;
