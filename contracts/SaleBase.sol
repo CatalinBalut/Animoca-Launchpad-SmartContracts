@@ -37,8 +37,6 @@ abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase
     using EnumSet for EnumSet.Set;
     using EnumMap for EnumMap.Map;
 
-    PauseBase cPauseBase;
-
     //////////////////////////////////////////////////
 
     struct SkuInfo {
@@ -181,8 +179,7 @@ abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase
         prices = new uint256[](length);
         for (uint256 i = 0; i < length; ++i) {
             (bytes32 token, bytes32 price) = skuInfo.prices.at(i);
-            //tokens[i] = address(uint256(token)); //!!!explicit type conversion not allwed from uint256 to address
-            tokens[i] = address(msg.sender); //!must be refactored
+            tokens[i] = address(uint160(uint256(token)));
             prices[i] = uint256(price);
         }
     }
@@ -227,9 +224,9 @@ abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase
             require(token != address(0), "Sale: zero address token");
             uint256 price = prices[i];
             if (price == 0) {
-                tokenPrices.remove(bytes32(abi.encode(token))); //!!!explicit type conversion not allwed from uint256 to address
+                tokenPrices.remove(bytes32(abi.encode(token)));
             } else {
-                tokenPrices.set(bytes32(abi.encode(token)), bytes32(price)); //!!!explicit type conversion not allwed from uint256 to address
+                tokenPrices.set(bytes32(abi.encode(token)), bytes32(price));
             }
         }
         require(tokenPrices.length() <= _tokensPerSkuCapacity, "Sale: too many tokens");
@@ -247,7 +244,6 @@ abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase
         if (skuInfo.totalSupply != SUPPLY_UNLIMITED) {
             require(skuInfo.remainingSupply >= purchase.quantity, "Sale: insufficient supply");
         }
-        //TODO address to bytes32 was removed in 0.8.0 -> must find another solution
         bytes32 priceKey = bytes32(abi.encode(purchase.token));
         require(skuInfo.prices.contains(priceKey), "Sale: non-existent sku token");
     }
@@ -293,85 +289,10 @@ abstract contract SaleBase is ContractOwnershipBase, PayoutWalletBase, PauseBase
 
     /////////////////////////////////////////////////////////////////////////////////////
 
-    function checkAddress(address account) public view returns(bool) {
-        return account.isContract();
-    }
-
     function initContract(address payoutWallet_) whenNotStarted() public {
          ContractOwnershipStorage.layout().proxyInit(msg.sender);
          PayoutWalletStorage.layout().proxyInit(payable(payoutWallet_));
          PauseStorage.layout().proxyInit(true);
     }
-
-    function checkLifeCycle() whenStarted() public{
-       _payment(PurchaseLifeCyclesStorage.layout());
-       _validation(PurchaseLifeCyclesStorage.layout());
-       _pricing(PurchaseLifeCyclesStorage.layout());
-       _delivery(PurchaseLifeCyclesStorage.layout());
-       _notification(PurchaseLifeCyclesStorage.layout());
-    }
-
-    function startT() public {
-         _start();
-    }
-
-     /*                            Internal Life Cycle Step Functions                             */
-
-
-    // function _validation(PurchaseLifeCyclesStorage.Layout storage purchase) internal view virtual override {
-    //     require(purchase.totalPrice > 0, "Sale: zero address recipient");
-    //     console.log("validation works");
-    // }
-
-
-    // function _pricing(PurchaseLifeCyclesStorage.Layout memory purchase) internal view virtual override {
-    //     require(purchase.totalPrice > 0, "Sale: zero address recipient");
-    //     console.log("_pricing works");
-    // }
-
-    // function _payment(PurchaseLifeCyclesStorage.Layout memory purchase) internal virtual override {
-    //     purchase.totalPrice = 1;
-    //     console.log("_pricing works", purchase.totalPrice);
-    // }
-
-
-    // function _delivery(PurchaseLifeCyclesStorage.Layout memory purchase) internal virtual override {
-    //     purchase.totalPrice = 2;
-    //     console.log("_pricing works", purchase.totalPrice);
-
-    // }
-
-    // function _notification(PurchaseLifeCyclesStorage.Layout memory purchase) internal virtual override {
-    //     purchase.totalPrice = 3;
-    //     console.log("_pricing works", purchase.totalPrice);
-
-    // }
-
-    //Isale
-
-    // function purchaseFor() public {}
-
-    // function purchaseFor() public {}
-
-    // function purchaseFor() public {}
-
-    // function estimatePurchase() public {}
-
-    // function getSkuInfo() external view {
-
-    //             returns (
-    //         uint256 totalSupply,
-    //         uint256 remainingSupply,
-    //         uint256 maxQuantityPerPurchase,
-    //         address notificationsReceiver,
-    //         address[] memory tokens,
-    //         uint256[] memory prices
-    //     );
-    // }
-
-    // function getSkus() external view returns (bytes32[] memory skus);
-
-    
-    
 
 }
