@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.9;
-
+import "hardhat/console.sol";
 import {FixedPricesSale} from "./FixedPricesSale.sol";
 import {TokenRecoveryBase} from "@animoca/ethereum-contracts/contracts/security/base/TokenRecoveryBase.sol";
 //TODO merkle proof
@@ -58,9 +58,9 @@ contract TokenLaunchpadVoucherPacksSale is FixedPricesSale, TokenRecoveryBase {
         address token,
         bytes32 sku,
         uint256 quantity,
-        bytes calldata userData,
-        bytes32[] calldata merkleProof
-    ) public payable whenStarted {
+        bytes calldata userData
+        // bytes32[] calldata merkleProof
+    ) public payable whenStarted override {
         // require(MerkleProof.verify(merkleProof, MerkleRoots[sku], keccak256(abi.encodePacked(msg.sender))), "invalid merkle proof");
         // require(CoolOff[sku][msg.sender] < block.number, "cool off period is not over");
         // CoolOff[sku][msg.sender] += block.number + coolOffPeriod;
@@ -72,19 +72,19 @@ contract TokenLaunchpadVoucherPacksSale is FixedPricesSale, TokenRecoveryBase {
         purchase.sku = sku;
         purchase.quantity = quantity;
         purchase.userData = userData;
-
+        console.log("inainte de _purchase");
         _purchaseFor(purchase);
     }
 
-    function purchaseFor(
-        address payable recipient,
-        address token,
-        bytes32 sku,
-        uint256 quantity,
-        bytes calldata userData
-    ) public payable override whenStarted {
-        require(false, "Deprecated function");
-    }
+    // function purchaseFor(
+        // address payable recipient,
+        // address token,
+        // // bytes32 sku,
+        // // uint256 quantity,
+        // // bytes calldata userData
+    // // ) public payable override whenStarted {
+        // // require(false, "Deprecated function");
+    // }
 
     // uint256 public coolOffPeriod;
 
@@ -118,26 +118,31 @@ contract TokenLaunchpadVoucherPacksSale is FixedPricesSale, TokenRecoveryBase {
         uint256 maxQuantityPerPurchase,
         uint256[] calldata tokenIds,
         uint256 startTimestamp,
-        uint256 endTimestamp,
-        bytes32 _merkleRoot
+        uint256 endTimestamp
+        // bytes32 _merkleRoot
     ) external {
+        console.log("owner ", owner());
         require(msg.sender == owner());
         uint256 length = tokenIds.length;
         require(length != 0, "Sale: empty tokens");
+        console.log("a");
         for (uint256 i; i != length; ++i) {
+            console.log("a");
             require(
                 vouchersContract.isFungible(tokenIds[i]),
                 "Sale: not a fungible token"
             );
         }
+        console.log("a");
         _skuAdditionalInfo[sku] = SkuAdditionalInfo(
             tokenIds,
             startTimestamp,
             endTimestamp
         );
+        console.log("a");
         _createSku(sku, totalSupply, maxQuantityPerPurchase, address(0));
 
-        MerkleRoots[sku] = _merkleRoot;
+        // MerkleRoots[sku] = _merkleRoot;
     }
 
     /**
@@ -210,15 +215,16 @@ contract TokenLaunchpadVoucherPacksSale is FixedPricesSale, TokenRecoveryBase {
             endTimestamp == 0 || block.timestamp < endTimestamp,
             "Sale: already ended"
         );
-
+        console.log("AJUNGE PANA IN DELIVERY");
         uint256 length = info.tokenIds.length;
         if (length == 1) {
+            console.log("AJUNGE PANA IN DELIVERY");
             vouchersContract.safeMint(
                 purchase.recipient,
                 info.tokenIds[0],
                 purchase.quantity,
                 ""
-            );
+            );console.log("AJUNGE PANA IN DELIVERY");
         } else {
             uint256 purchaseQuantity = purchase.quantity;
             uint256[] memory quantities = new uint256[](length);
@@ -230,8 +236,10 @@ contract TokenLaunchpadVoucherPacksSale is FixedPricesSale, TokenRecoveryBase {
                 info.tokenIds,
                 quantities,
                 ""
-            );
+            );console.log("AJUNGE PANA IN DELIVERY");
         }
+    console.log("AJUNGE PANA IN DELIVERY trece");
+
     }
 }
 
