@@ -9,8 +9,19 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@animoca/ethereum-contracts-assets-2.0.0": "npm:@animoca/ethereum-contracts-assets@2.0.0",
+    "@animoca/ethereum-contracts-core": "^1.1.2",
+    "@animoca/ethereum-contracts-core-1.1.2": "npm:@animoca/ethereum-contracts-core@1.1.2",
+    "ethereum-universal-forwarder-1.0.0": "git+https://github.com/animoca/universal-forwarder.git",
     "@animoca/ethereum-contracts": "^0.1.0-rc.22",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+    "@openzeppelin/contracts": "^4.7.3",
+    "@openzeppelin/test-helpers": "^0.5.16",
+    "ethereum-universal-forwarder": "^2.0.0-beta",
     "hardhat": "^2.11.1"
+  },
+  "dependencies": {
+    "@animoca/blockchain-inventory_metadata": "^0.1.0"
   }
 }
